@@ -40,17 +40,8 @@ test_expect_success 'cabin run -- passes arguments to program' '
     cd $OUT &&
     "$CABIN" new test_args &&
     cd test_args &&
-    cat >src/main.cc <<-EOF &&
-#include <iostream>
-int main(int argc, char* argv[]) {
-    std::cout << "argc=" << argc << std::endl;
-    for (int i = 1; i < argc; ++i) {
-        std::cout << "arg[" << i << "]=" << argv[i] << std::endl;
-    }
-    return 0;
-}
-EOF
-    "$CABIN" run -- --help --version foo 1>stdout 2>stderr &&
+    cp "$WHEREAMI/06-run/test_args.cc" src/main.cc &&
+    "$CABIN" run -- --help --version foo 1>stdout &&
     (
         cat >stdout_exp <<-EOF &&
 argc=4
@@ -68,17 +59,8 @@ test_expect_success 'cabin run without -- stops at first unknown arg' '
     cd $OUT &&
     "$CABIN" new test_args2 &&
     cd test_args2 &&
-    cat >src/main.cc <<-EOF &&
-#include <iostream>
-int main(int argc, char* argv[]) {
-    std::cout << "argc=" << argc << std::endl;
-    for (int i = 1; i < argc; ++i) {
-        std::cout << "arg[" << i << "]=" << argv[i] << std::endl;
-    }
-    return 0;
-}
-EOF
-    "$CABIN" run foo bar --release 1>stdout 2>stderr &&
+    cp "$WHEREAMI/06-run/test_args.cc" src/main.cc &&
+    "$CABIN" run foo bar --release 1>stdout &&
     (
         cat >stdout_exp <<-EOF &&
 argc=4
